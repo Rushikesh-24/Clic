@@ -4,8 +4,7 @@ import mongoose from "mongoose";
 const User =mongoose.model("User");
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import { JWT_SECRET } from "../keys.js"; 
-import requiredLogin from "../middleware/requirelogin.js"
+import { JWT_SECRET } from "../keys.js";
 
 
 router.post("/signup",(req,res)=>{

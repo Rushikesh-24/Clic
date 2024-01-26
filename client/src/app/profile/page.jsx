@@ -5,6 +5,7 @@ import Header from '../components/Header'
 const page = () => {
   const [post, setPost] = useState([])
   const [userdata, setUserdata] = useState("")
+  const [postCount, setpostCount] = useState(0)
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (!token) {
@@ -22,6 +23,7 @@ const page = () => {
     .then(res=>res.json())
     .then(result =>{
       setPost(result.myPost)
+      setpostCount(result.myPost.length)
     })
   },[])
 
@@ -36,7 +38,7 @@ const page = () => {
       const newdata = post.filter(item=>{
         return item._id !=result._id
       })
-      setPost(newdata);
+      setPost(newdata.myPost);
     })
   }
 
@@ -52,7 +54,7 @@ const page = () => {
         <div id="info" className='m-10 text-center'>
           <h3 className='font-semibold text-xl'>{userdata}</h3>
           <div className='mt-5 text-gray-400'>
-            <h4>10 posts</h4>
+            <h4>{postCount + " posts"}</h4>
             <h4>100 followers</h4>
             <h4>100 following</h4>
           </div>

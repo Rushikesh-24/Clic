@@ -7,7 +7,7 @@ import post from './models/post.js'
 import router from './routes/auth.js'
 import router2 from './routes/post.js'
 const app = express();
-const PORT = 3000;
+const PORT =process.env.PORT || 3000;
 
 mongoose.connect(MONGOURI)
 mongoose.connection.on("connected",()=>{
@@ -25,6 +25,15 @@ app.use(router2)
 app.get('/', (req, res, next) => {
     res.send("Hello, world!");
 })
+
+if(process.env.NODE_ENV == 'production'){
+    app.use(express.static("../client/build"))
+    const path = require('path')
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'))
+    })
+}
+
 app.listen(PORT,()=>{
     console.log(`SERVER IS RUNNING ON PORT ${PORT}`);
 })
