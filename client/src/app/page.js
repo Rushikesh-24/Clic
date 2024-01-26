@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [like, setlike] = useState(false)
+  const [data, setData] = useState([])
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (!token) {
       window.location.href = '/login';
     }
   }, []);
-  const [data, setData] = useState([])
   useEffect(()=>{
     fetch("http://localhost:3000/allpost",{
       method: "get",
@@ -110,7 +110,6 @@ const comment = (text,postId) => {
     console.log(err);
   })
 }
-
   return (
     <>
     <Header/>
@@ -119,7 +118,9 @@ const comment = (text,postId) => {
           {data.map(item=>{
             return(
               <div id="post" className="m-10 md:flex md:flex-col md:justify-center md:items-center" key={item._id}>
-            <h5 className="mb-3">{item.postedby.name}</h5>
+                <div id="head" className="flex h-10 justify-between">
+            <h5 className="flex items-center">{item.postedby.name}</h5>
+                </div>
             <img src={item.photo} alt="" className="md:w-1/2 border-white border-2"/>
             <div id="content" className="mt-3 md:text-center">
               <img src="/like.png" alt="" className={`w-7 m-2 ${like ? '' : ''}`} onClick={()=>{
@@ -129,7 +130,7 @@ const comment = (text,postId) => {
                 else{
                   likepost(item._id)
                 }
-              }}/>
+              }} loading="lazy"/>
               <h4>{item.likes.length} Likes</h4>
               <h4>{item.title}</h4>
               <p>{item.body}</p>

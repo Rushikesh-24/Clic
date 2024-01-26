@@ -67,9 +67,6 @@ const page = () => {
       const url = await cloudinaryUpload(image);
   
       const postDataResponse = await createPost(title, body, url, localStorage.getItem("jwt"));
-  
-      console.log(postDataResponse);
-  
       if (!postDataResponse.err) {
         router.push('/');
         toast.success("Successfully posted");

@@ -105,5 +105,26 @@ router2.put("/comment", requiredLogin, async (req, res) => {
     }
 });
 
+router2.delete("/deletepost/:postId", requiredLogin, async (req, res) => {
+    try {
+        const post = await Post.findOne({_id: req.params.postId}).populate("postedby", '_id').exec();
+
+        if (!post) {
+            return res.status(422).json({error: "Post not found"});
+        }
+
+        if (post.postedby._id.toString() !== req.user._id.toString()) {
+            return res.status(401).json({error: "You are not authorized to delete this post"});
+        }
+
+        await Post.deleteOne({_id: req.params.postId});
+
+        res.json({message: "Post deleted successfully"});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({error: "Internal Server Error"});
+    }
+});
+
 
 export default router2

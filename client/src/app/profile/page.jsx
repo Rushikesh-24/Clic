@@ -24,6 +24,23 @@ const page = () => {
       setPost(result.myPost)
     })
   },[])
+
+  const deletePost = (postId) => {
+    fetch(`http://localhost:3000/deletepost/${postId}`,{
+      method: "delete",
+      headers:{
+        "Authorization":"Bearer "+localStorage.getItem("jwt")
+      }
+    }).then(res=>res.json())
+    .then(result=>{
+      const newdata = post.filter(item=>{
+        return item._id !=result._id
+      })
+      setPost(newdata);
+    })
+  }
+
+
   return (
     <>
     <Header/>
@@ -42,9 +59,19 @@ const page = () => {
         </div>
       </div>
       <h3 className='m-8 text-xl'>Posts</h3>
-      <div id="posts" className='grid grid-cols-3 gap-3 m-4 '>
+      <div id="posts" className='flex flex-col'>
         {post.map(item=>{
-            return <img src={item.photo} alt={item.title} key={item._id} className=' border-2 border-gray-500'/>
+            return <div  key={item._id} className='m-5'>
+              <div  id="head" className="flex h-10 justify-between">
+            <h4 className='flex items-center justify-center'>{item.createdAt.split('T')[0]}</h4>
+            <img src="/recycle-bin.png" alt="delete" className="p-2"
+            onClick={()=>
+            {
+              deletePost(item._id);
+            }}/>
+              </div>
+            <img src={item.photo} alt={item.title} className=' border-2 border-gray-500'/>
+            </div>
         })
        }
       </div>
